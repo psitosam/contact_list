@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/contacts', to: 'contacts#index'
       get '/contacts/:id', to: 'contacts#show'
+      post '/contacts/', to: 'contacts#create'
+      put '/contacts/:id', to: 'contacts#update'
     end
   end
 end

@@ -36,6 +36,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry'
   gem 'csv'
+  gem 'sqlite3'
 end
 
 group :development do
@@ -50,7 +51,7 @@ group :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'simplecov'
+  gem 'simplecov', require: false, group: :test
   gem 'shoulda-matchers'
   gem 'webmock'
   gem 'vcr'

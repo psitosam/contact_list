@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_20_173232) do
+ActiveRecord::Schema.define(version: 2022_05_21_170537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,11 +23,17 @@ ActiveRecord::Schema.define(version: 2022_05_20_173232) do
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.string "number"
-    t.string "phone_type"
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  create_table "phones", force: :cascade do |t|
+    t.string "number"
+    t.integer "phone_type", default: 0
+    t.bigint "contact_id"
+    t.index ["contact_id"], name: "index_phones_on_contact_id"
+  end
+
+  add_foreign_key "phones", "contacts"
 end

@@ -5,11 +5,11 @@ class Contact < ApplicationRecord
                         :street,
                         :city,
                         :state,
-                        :zip,
-                        :number,
-                        :phone_type, default: "home"
+                        :zip
   validates             :email, format: { with: URI::MailTo::EMAIL_REGEXP},
                         :presence => {message: "can't be blank"},
                         :uniqueness => true
   validates_format_of   :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
+
+  has_many              :phones
 end
