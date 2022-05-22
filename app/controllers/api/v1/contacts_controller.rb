@@ -18,9 +18,10 @@ class Api::V1::ContactsController < ApplicationController
   end
 
   def create
-    contact = Contact.new(contact_params)
+    contact = Contact.create!(contact_params)
     if contact.save
       render json: ContactsSerializer.format_single_contact(contact),
+      #render json: ContactsSerializer.format_single_contact(Contact.create(contact_params)),
              status: 201
     else
       render json: { data: { message: 'Invalid attributes'} },

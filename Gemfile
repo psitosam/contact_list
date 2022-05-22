@@ -57,6 +57,7 @@ group :test do
   gem 'vcr'
   gem 'launchy'
   gem 'orderly'
+  gem 'database_cleaner-active_record'
 end
 
 
