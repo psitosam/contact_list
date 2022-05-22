@@ -15,8 +15,6 @@ RSpec.describe 'the contacts API' do
 
     # Here I am using FactoryBot to create test data that conforms to the specifications in the challenge documentation. Please see ./spec/factories/contact.rb for more information. It is using the faker gem documented here: https://github.com/faker-ruby/faker#deterministic-random
 
-    # Speaking of FactoryBot: in ./spec/factories/contact.rb I made sure to specify that the phone_type would be set to 'home', as in the documentation it is stated that the call list will be generated from all contacts that include a home phone. This can be overwriten in later testing to check that only contacts with a value of 'home' for the key :phone_type will be added to the call list.
-
     get "/api/v1/contacts"
 
     parsed = JSON.parse(response.body, symbolize_names: true)
@@ -39,7 +37,7 @@ RSpec.describe 'the contacts API' do
       expect(contact[:attributes][:address][:zip]).to be_a String
 
       expect(contact[:attributes][:phone][0][:number]).to be_a String
-      #The Contact to Phone relationship 
+      #The Contact to Phone relationship
       expect(contact[:attributes][:phone][0][:phone_type]).to eq("home")
       expect(contact[:attributes][:email]).to be_a String
       # Validation for the formatting of email addresses is checked in the Model: ./app/models/contact.rb
