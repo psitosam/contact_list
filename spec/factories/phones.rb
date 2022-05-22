@@ -6,3 +6,4 @@ FactoryBot.define do
     phone_type {0}
   end
 end
+# Phone type has been set to default to home (enum: 0).
