@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+
 RSpec.describe 'the contacts API' do
   it 'returns index of all contacts' do
     contact_1 = create :contact
@@ -37,7 +38,7 @@ RSpec.describe 'the contacts API' do
       expect(contact[:attributes][:address][:zip]).to be_a String
 
       expect(contact[:attributes][:phone][0][:number]).to be_a String
-      #The Contact to Phone relationship
+      #The Contact to Phone relationship. Checking the first element of the phones array for each contact.
       expect(contact[:attributes][:phone][0][:phone_type]).to eq("home")
       expect(contact[:attributes][:email]).to be_a String
       # Validation for the formatting of email addresses is checked in the Model: ./app/models/contact.rb
@@ -79,6 +80,41 @@ RSpec.describe 'the contacts API' do
       expect(response.status).to eq(404)
       expect(contact).to have_key(:message)
       expect(contact[:message]).to eq('No contact matches this id')
+    end
+  end
+
+  context 'post' do
+    it 'creates a new Contact and adds it to the Contacts index' do
+      contact_1 = create :contact
+      phone_1 = create(:phone, contact_id: Contact.last.id)
+      phone_2 = create(:phone, phone_type: 1, contact_id: Contact.last.id)
+      contact_params =
+      {
+        id: contact_1.id,
+        first_name: contact_1.first_name,
+        middle_name: contact_1.middle_name,
+        last_name: contact_1.last_name,
+        street: contact_1.street,
+        city: contact_1.city,
+        state: contact_1.state,
+        zip: contact_1.zip,
+        phone: contact_1.phones.map do |phone|
+            {
+              number: phone.number,
+              phone_type: phone.phone_type
+            }
+          end,
+        email: contact_1.email
+      }
+      post "/api/v1/contacts/", params: contact_params
+
+      contact = Contact.last
+
+      expect(response.status).to eq(201)
+      expect(contact.first_name).to eq(contact_1.first_name)
+      expect(contact.middle_name).to eq(contact_1.middle_name)
+      expect(contact.last_name).to eq(contact_1.last_name)
+      expect(contact.last_name).to eq(contact_1.last_name)
     end
   end
 end
