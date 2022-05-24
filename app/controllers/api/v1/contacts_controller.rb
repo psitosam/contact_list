@@ -18,10 +18,9 @@ class Api::V1::ContactsController < ApplicationController
   end
 
   def create
-    contact = Contact.create!(contact_params)
+    contact = Contact.create(contact_params)
     if contact.save
       render json: ContactsSerializer.format_single_contact(contact),
-      #render json: ContactsSerializer.format_single_contact(Contact.create(contact_params)),
              status: 201
     else
       render json: { data: { message: 'Invalid attributes'} },
@@ -30,7 +29,31 @@ class Api::V1::ContactsController < ApplicationController
   end
 
   def update
+    contact = Contact.find(params[:id])
+    if contact_params[:phone].present?
+      contact.phones.create(contact_params[:phone])
+        if contact.save
+          render json: ContactsSerializer.format_single_contact(contact),
+                 status: 200
+        else
+          render json: { data: { message: 'Invalid request'} },
+                 status: 404
+        end
+    elsif
+      contact.update(contact_params)
+      render json: ContactsSerializer.format_single_contact(contact),
+             status: 200
+    else
+      render json: { data: { message: 'Invalid request'} },
+             status: 404
+    end
+  end
 
+  def delete
+    contact = Contact.find(params[:id])
+    if contact.destroy
+      render status: 204
+    end
   end
 
 
@@ -48,9 +71,7 @@ class Api::V1::ContactsController < ApplicationController
                     :city,
                     :state,
                     :zip,
-                    :number,
-                    :phone_type,
                     :email,
-                    :phones)
+                    phone: [:number, :phone_type, :contact_id])
     end
 end

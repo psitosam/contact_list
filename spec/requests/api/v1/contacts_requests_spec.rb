@@ -106,7 +106,7 @@ RSpec.describe 'the contacts API' do
           end,
         email: contact_1.email
       }
-      post "/api/v1/contacts/", params: contact_params
+      post "/api/v1/contacts/", params: (contact_params)
 
       contact = Contact.last
 
@@ -115,6 +115,74 @@ RSpec.describe 'the contacts API' do
       expect(contact.middle_name).to eq(contact_1.middle_name)
       expect(contact.last_name).to eq(contact_1.last_name)
       expect(contact.last_name).to eq(contact_1.last_name)
+    end
+
+    describe 'sad path' do
+      it 'returns an error if given invalid attributes' do
+        contact_2 = Contact.create(first_name: "Alex", middle_name: "", last_name: "")
+        contact_params =
+        {
+          id: contact_2.id,
+          first_name: contact_2.first_name,
+          middle_name: contact_2.middle_name,
+          last_name: contact_2.last_name,
+          street: contact_2.street,
+          city: contact_2.city,
+          state: contact_2.state,
+          zip: contact_2.zip,
+          phone: contact_2.phones.map do |phone|
+              {
+                number: phone.number,
+                phone_type: phone.phone_type
+              }
+            end,
+          email: contact_2.email
+        }
+
+        post "/api/v1/contacts/", params: contact_params
+
+        parsed = JSON.parse(response.body, symbolize_names: true)
+        contact = parsed[:data]
+        expect(response.status).to eq(424)
+        expect(contact).to have_key(:message)
+        expect(contact[:message]).to eq('Invalid attributes')
+
+      end
+    end
+  end
+
+  context 'put' do
+    it 'updates an existing contact' do
+      contact_1 = create :contact
+      phone_1 = create(:phone, contact_id: contact_1.id)
+      contact_params = { phone: [{ number: "123-456-7891", phone_type: "mobile", contact_id: contact_1.id}] }
+
+      put "/api/v1/contacts/#{contact_1.id}", params: (contact_params)
+
+      parsed = JSON.parse(response.body, symbolize_names: true)
+      contact = parsed[:data]
+
+      expect(response.status).to eq(200)
+      expect(contact[:attributes][:phone][0][:number]).to be_a String
+      expect(contact[:attributes][:phone][0][:phone_type]).to eq("home")
+      expect(contact[:attributes][:phone][1][:number]).to be_a String
+      expect(contact[:attributes][:phone][1][:phone_type]).to eq("mobile")
+
+    end
+
+    it 'returns an error message if given invalid data' do
+      contact_1 = create :contact
+      phone_1 = create(:phone, contact_id: contact_1.id)
+      contact_params = { phone: [{ number: "", phone_type: "mobile", contact_id: contact_1.id}] }
+
+      put "/api/v1/contacts/#{contact_1.id}", params: (contact_params)
+
+      parsed = JSON.parse(response.body, symbolize_names: true)
+      contact = parsed[:data]
+
+      expect(response.status).to eq(404)
+      expect(contact).to have_key(:message)
+      expect(contact[:message]).to eq('Invalid request')
     end
   end
 end
