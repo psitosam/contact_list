@@ -35,22 +35,7 @@ RSpec.describe Contact, type: :model do
     end
 
     it 'generates a call list of contacts that have a home number listed' do
-      # contacts = (
-      #   contact_1 = create :contact
-      #   phone_1 = create :phone, { contact_id: contact_1.id } #home number
-      #   phone_2 = create :phone, { phone_type: 2, contact_id: contact_1.id } #mobile number
-      #
-      #   contact_2 = create :contact
-      #   phone_3 = create :phone, { contact_id: contact_2.id } #home number
-      #   phone_4 = create :phone, { phone_type: 2, contact_id: contact_2.id } #mobile number
-      #
-      #   contact_3 = create :contact
-      #   phone_5 = create :phone, { phone_type: 2, contact_id: contact_3.id } #mobile number
-      #
-      #   contact_4 = create :contact
-      #   phone_6 = create :phone, { contact_id: contact_4.id } #home number
-      #   phone_7 = create :phone, { phone_type: 2, contact_id: contact_4.id } #mobile number
-      # )
+
       contact_1 = Contact.create(first_name: "India", middle_name: "Corwin", last_name: "Lynch", street: "612 Cyndy Coves", city: "Howellton", state: "Oklahoma", zip: "41265-1557", phone: [], email: "ernest@simonis-wolf.org")
       phone_1 = Phone.create(number: "937-262-3861", phone_type: "mobile", contact_id: contact_1.id)
       #contact_1 has only a mobile number, non-select expected
@@ -72,11 +57,12 @@ RSpec.describe Contact, type: :model do
       contact_5 = Contact.create(first_name: "Long", middle_name: "Breitenberg", last_name: "Wolff", street: "224 Grant Islands", city: "Port Trentburgh", state: "New Hampshire", zip: "62350-2289", phone: [], email: "ronny@cole.name")
       phone_5 = create :phone, { contact_id: contact_5.id }
       # contact_5 has only a home number
-      
+
 
       expected = ([contact_2, contact_4, contact_5])
 
       expect(Contact.call_list).to eq(expected)
+      # This is checking that the method returns the (correct and in alphebetized order) complete object for each Contact, so that the serializer can then format the information it needs.
 
     end
   end

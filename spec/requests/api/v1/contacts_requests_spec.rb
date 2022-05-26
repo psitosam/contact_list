@@ -187,6 +187,13 @@ RSpec.describe 'the contacts API' do
     end
   end
 
+  context 'delete' do
+    it 'removes a contact from the index' do
+      contact_1 = create :contact
+      phone_1 = create(:phone, contact_id: contact_1.id)
+    end
+  end
+
   context 'call list' do
     it 'returns an array of contacts that have home phone numbers' do
 
@@ -223,13 +230,11 @@ RSpec.describe 'the contacts API' do
       expect(contacts.class).to eq(Array)
       expect(contacts.length).to eq(3)
       expect(contacts[0][:attributes][:name][:last]).to eq("Kuhn")
-      expect(contacts[0][:attributes][:phone].class).to eq(Array)
-      expect(contacts[0][:attributes][:phone].first[:phone_type]).to eq("home")
+      expect(contacts[0][:attributes][:phone][:phone_type]).to eq("home")
       expect(contacts[1][:attributes][:name][:last]).to eq("Quigley")
-      expect(contacts[1][:attributes][:phone].first[:phone_type]).to eq("home")
+      expect(contacts[1][:attributes][:phone][:phone_type]).to eq("home")
       expect(contacts[2][:attributes][:name][:last]).to eq("Wolff")
-      expect(contacts[2][:attributes][:phone].first[:phone_type]).to eq("home")
-
+      expect(contacts[2][:attributes][:phone][:phone_type]).to eq("home")
     end
 
   end

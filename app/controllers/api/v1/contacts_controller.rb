@@ -57,15 +57,8 @@ class Api::V1::ContactsController < ApplicationController
   end
 
   def call_list
-    render json: ContactsSerializer.format_contacts(Contact.call_list)
+    render json: ContactsSerializer.format_call_list(Contact.call_list)
   end
-
-
-
-
-
-
-
 
 
   private
