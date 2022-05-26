@@ -15,19 +15,9 @@ class Contact < ApplicationRecord
   # before_save           :normalize_phone
 
   def self.call_list
-
-    wip =    joins(:phones)
-            .where(phones: {phone_type: 0})
-            .select('contacts.*, phones.*')
-            .group(:id)
-            .order(:last_name)
-            .order(:first_name)
-            require 'pry'; binding.pry
-            # .where('phones.phone_type = 0')
-            # .select('contacts.*')
-            # .order(:id)
-            # .order(:last_name)
-            # .order(:first_name)
+    Contact.find_by_sql("SELECT contacts.* FROM contacts INNER JOIN phones ON phones.contact_id = contacts.id WHERE phones.phone_type = 0 ORDER BY contacts.last_name, contacts.first_name")
+    # using ActiveRecord:
+    # Contact.joins(:phones).where(phones: { phone_type: 0 }).order(:last_name, :first_name)
   end
   # def normalize_phone
   #   self.phones.each do |phone|

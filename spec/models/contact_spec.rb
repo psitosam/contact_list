@@ -72,10 +72,10 @@ RSpec.describe Contact, type: :model do
       contact_5 = Contact.create(first_name: "Long", middle_name: "Breitenberg", last_name: "Wolff", street: "224 Grant Islands", city: "Port Trentburgh", state: "New Hampshire", zip: "62350-2289", phone: [], email: "ronny@cole.name")
       phone_5 = create :phone, { contact_id: contact_5.id }
       # contact_5 has only a home number
+      
 
       expected = ([contact_2, contact_4, contact_5])
 
-      require 'pry'; binding.pry
       expect(Contact.call_list).to eq(expected)
 
     end
