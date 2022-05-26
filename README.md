@@ -54,7 +54,7 @@ $ git clone https://github.com/psitosam/contact_list.git
 Once cloned, you'll have a new local copy in the directory you ran the clone command in.
 
 2. Change to the project directory:<br>
-In terminal, use `$cd` to navigate to the Rails Engine Lite project directory.
+In terminal, use `$cd` to navigate to the Contact List project directory.
 
 ```shell
 $ cd contact_list
