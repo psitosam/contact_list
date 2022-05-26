@@ -8,13 +8,4 @@ class Phone < ApplicationRecord
     work: 1,
     mobile: 2
   }
-
-  # def create
-  #   Phone.new(phone_params)
-  # end
-  #
-  # private
-  #   def phone_params
-  #     params.permit(:number, :phone_type)
-  #   end
 end
