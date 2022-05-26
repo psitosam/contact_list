@@ -40,6 +40,7 @@ RSpec.describe 'the contacts API' do
       expect(contact[:attributes][:phone][0][:number]).to be_a String
       #The Contact to Phone relationship. Checking the first element of the phones array for each contact.
       expect(contact[:attributes][:phone][0][:phone_type]).to eq("home")
+      # Default test data is given a phone_type of "home". See spec/factories/contacts.rb for more.
       expect(contact[:attributes][:email]).to be_a String
       # Validation for the formatting of email addresses is checked in the Model: ./app/models/contact.rb
 
@@ -184,5 +185,43 @@ RSpec.describe 'the contacts API' do
       expect(contact).to have_key(:message)
       expect(contact[:message]).to eq('Invalid request')
     end
+  end
+
+  context 'call list' do
+    it 'returns an array of contacts that have home phone numbers' do
+      contact_1 = create :contact
+      phone_1 = create :phone, { phone_type: "mobile", contact_id: contact_1.id }
+      #contact_1 has only a mobile number, non-select expected
+
+      contact_2 = create :contact
+      phone_2 = create :phone, { contact_id: contact_2.id }
+      phone_6 = create :phone, { phone_type: "mobile", contact_id: contact_2.id }
+      # contact_2 has both a home number and a mobile number
+
+      contact_3 = create :contact
+      phone_3 = create :phone, { phone_type: "work", contact_id: contact_3.id }
+      # contact_3 has only a work number, non-select expected
+
+      contact_4 = create :contact
+      phone_4 = create :phone, { contact_id: contact_4.id }
+      phone_7 = create :phone, { phone_type: "work", contact_id: contact_4.id }
+      # contact_4 has both home and work numbers
+
+      contact_5 = create :contact
+      phone_5 = create :phone, { contact_id: contact_5.id }
+      # contact_5 has only a home number
+      # Total expected contacts: 3
+
+      get "/api/v1/contacts/call-list"
+
+      parsed = JSON.parse(response.body, symbolize_names: true)
+      contacts = parsed[:data]
+require 'pry'; binding.pry
+      expect(response).to be_successful
+      expect(response.status).to eq(200)
+      expect(contacts.class).to eq(Array)
+      expect(contacts.length).to eq(5)
+    end
+
   end
 end
